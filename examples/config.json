@@ -1,0 +1,37 @@
+{
+    "front" : { 
+        "servo"   : 1, 
+        "open"    : 1300, 
+        "close"   : 1898,
+        "max_vel" : 40000.0,
+        "max_acc" : 40000.0 
+    }, 
+    "left" : { 
+        "servo" : 2,   
+        "open"  : 1290, 
+        "close" : 1890, 
+        "max_vel" : 40000.0,
+        "max_acc" : 40000.0 
+    }, 
+    "right" : { 
+        "servo" : 3, 
+        "open"  : 1300, 
+        "close" : 1890,
+        "max_vel" : 40000.0,
+        "max_acc" : 40000.0 
+    },
+    "sleep_front" : { 
+        "servo" : 4, 
+        "open"  : 1300, 
+        "close" : 1890,
+        "max_vel" : 7000.0,
+        "max_acc" : 2000.0 
+    },
+    "sleep_back" : { 
+        "servo" : 5, 
+        "open"  : 1300, 
+        "close" : 1890,
+        "max_vel" : 7000.0,
+        "max_acc" : 2000.0 
+    }
+}

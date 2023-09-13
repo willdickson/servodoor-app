@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "servodoor-app"
+version = "0.1.0"
+description = ""
+authors = ["Will Dickson <wbd@caltech.edu>"]
+readme = "README.md"
+packages= [{include = "servodoor_app"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+pyside6 = "^6.5.2"
+pyserial = "^3.5"
+servodoor = {git="https://github.com/willdickson/servodoor"}
+adafruit-ampy = "^1.1.0"
+
+[tool.poetry.scripts]
+servodoor = "servodoor_app.main:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
