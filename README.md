@@ -1,6 +1,7 @@
 servodoor-app
 
-PySide6 base T-maze door control app using the [servodoor](https://github.com/willdickson/servodoor) library and 
+PySide6 base T-maze door control app using the
+[servodoor](https://github.com/willdickson/servodoor) library and
 [servodoor-firmware](https://github.com/willdickson/servodoor) firmware.  
 
 ![connect_tab](images/connect_tab.png)
