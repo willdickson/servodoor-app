@@ -1,15 +1,15 @@
 {
     "front" : { 
         "servo"   : 1, 
-        "open"    : 1300, 
-        "close"   : 1898,
+        "open"    : 1375, 
+        "close"   : 1987,
         "max_vel" : 40000.0,
         "max_acc" : 40000.0 
     }, 
     "left" : { 
         "servo" : 2,   
-        "open"  : 1290, 
-        "close" : 1890, 
+        "open"  : 1340, 
+        "close" : 1947, 
         "max_vel" : 40000.0,
         "max_acc" : 40000.0 
     }, 

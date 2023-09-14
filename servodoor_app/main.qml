@@ -35,7 +35,7 @@ ApplicationWindow {
 
     signal openCloseButtonClicked(string port)
     signal doorSwitchClicked(int index, string name, bool checked)
-    signal readConfigFile(string config_file)
+    signal loadConfigFile(string config_file)
 
     TabBar {
         id: navBar
@@ -223,7 +223,7 @@ ApplicationWindow {
         title: qsTr("Please choose a file")
         onAccepted: {
             configFileDialog.visible = false
-            backend.on_read_config_file(configFileDialog.selectedFile.toString())
+            backend.on_load_config_file(configFileDialog.selectedFile.toString())
         }
     }
     MessageDialog {

@@ -20,19 +20,19 @@ from servodoor import ServoDoor
 
 class AppBackend(QObject):
     """
-    Backend for servodoor app
+    Backend for servodoor control application.
     """
 
     TIMER_PERIOD_MS = 5000
+    RESET_SLEEP_SEC = 7.0
 
     def __init__(self, win):
 
         super().__init__()
-
         self.win = win
         self.win.doorSwitchClicked.connect(self.on_door_switch_clicked)
         self.win.openCloseButtonClicked.connect(self.on_open_close_button)
-        self.win.readConfigFile.connect(self.on_read_config_file)
+        self.win.loadConfigFile.connect(self.on_load_config_file)
         self.win.setProperty("openCloseButtonText", "Open")
         self.win.setProperty("loadButtonEnabled", False)
 
@@ -50,7 +50,9 @@ class AppBackend(QObject):
 
     @Slot(str)
     def on_open_close_button(self, port):
-        print('open/close button clicked')
+        """
+        Open/close connection to device on button click
+        """
         if self.device is None:
             self.timer.stop()
             self.open_device(port)
@@ -60,6 +62,10 @@ class AppBackend(QObject):
 
 
     def open_device(self, port): 
+        """
+        Open a connection to the servodoor device. Read device config
+        and setup door switches and info texts. 
+        """
         self.set_port_info(port)
         self.device = ServoDoor(port=port)
         self.win.setProperty("openCloseButtonText", "Close")
@@ -70,6 +76,10 @@ class AppBackend(QObject):
 
 
     def close_device(self): 
+        """
+        Close connection to device. Reset door GUI (switches) and clear
+        info texts.
+        """
         self.device.close()
         self.device = None
         self.clear_port_info()
@@ -81,7 +91,9 @@ class AppBackend(QObject):
 
     @Slot(str)
     def on_door_switch_clicked(self, index, name, checked):
-        print(f'door: {index}, {name}, {checked}')
+        """
+        Open/close door when door swich state is changed.
+        """
         if self.device is None:
             return
         cmd = {name: 'open' if checked else 'close'}
@@ -89,9 +101,12 @@ class AppBackend(QObject):
 
 
     @Slot(str)
-    def on_read_config_file(self, filename):
+    def on_load_config_file(self, filename):
+        """
+        Load configuration, check that is is valid json and upload configuration 
+        to device. 
+        """
         filename = filename.replace('file://', '')
-        print(f'config file: {filename}')
         if self.device is None:
             return
         if not is_valid_json(filename):
@@ -103,12 +118,18 @@ class AppBackend(QObject):
         self.win.setProperty('configInfoText', f'\nuploading config and resetting device - please wait :) ')
         QTimer.singleShot(200, functools.partial(self.upload_config, filename))
 
+
     def on_timer(self):
+        """
+        Timer callback for checking available ports when device is not connected
+        """
         self.update_ports()
 
 
     def update_ports(self):
-        print('update_ports')
+        """
+        Update list of available ports.
+        """
         port_list = serial.tools.list_ports.comports()
         port_names = [item.device for item in port_list]
         if sys.platform.startswith('linux'):
@@ -118,6 +139,9 @@ class AppBackend(QObject):
 
 
     def set_port_info(self, port): 
+        """
+        Set serial port info text in GUI.
+        """
         port_info = self.port_info[port]
         lines = []
         lines.append(f'{port_info.device}')
@@ -130,10 +154,16 @@ class AppBackend(QObject):
 
 
     def clear_port_info(self):
+        """
+        Clear serial port info text in GUI.
+        """
         self.win.setProperty('portInfoText', '')
 
 
     def read_device_config(self):
+        """
+        Read configuration currently in device's firmware
+        """
         if self.device is None:
             return
         # Check for configuration errors
@@ -154,15 +184,25 @@ class AppBackend(QObject):
 
 
     def set_config_info(self):
+        """
+        Set the configuration information text on the GUI
+        """
         info_str = json.dumps(self.config, indent=4, sort_keys=True) 
         self.win.setProperty('configInfoText', info_str)
 
 
     def clear_config_info(self):
+        """
+        Clear the configuration information text on the GUI
+        """
         self.win.setProperty('configInfoText', '')
 
 
     def set_config_doors(self):
+        """
+        Set the door configuration on the GUI base on data load from the
+        device. Sets the number, names and state of the switches. 
+        """
         # Set door names
         door_names = [k for k in self.config]
         door_names.sort()
@@ -179,6 +219,9 @@ class AppBackend(QObject):
 
 
     def clear_config_doors(self):
+        """
+        Clears the door configuration in the GUI. Removes all doors.  
+        """
         self.index_to_door = {}
         self.win.setProperty('numDoors', 0)
         self.win.setProperty('doorChecks', [])
@@ -186,6 +229,10 @@ class AppBackend(QObject):
 
 
     def upload_config(self, filename):
+        """
+        Upload the configuration specified by filename to the devices 
+        firmware.
+        """
         if self.device is None:
             return
 
@@ -194,15 +241,13 @@ class AppBackend(QObject):
         self.close_device()
 
         # Upload configuration file
-        print(f'uploading {filename}')
         cmd_list = ['ampy', '-p', port, 'put', filename]
         subprocess.run(cmd_list)
 
-        print('resetting device')
+        # Reset device
         cmd_list = ['ampy', '-p', port, 'reset', '--hard']
         subprocess.run(cmd_list)
-
-        time.sleep(5.0)
+        time.sleep(self.RESET_SLEEP_SEC)
 
         # Re-open connection to device
         self.open_device(port)
@@ -212,9 +257,7 @@ class AppBackend(QObject):
 # -----------------------------------------------------------------------------------------------
 
 def is_valid_json(filename):
-    """
-    Check if file contains valid json
-    """
+    """ Check if file contains valid json """
     rval = True
     with open(filename,'r') as f:
         try:
@@ -225,9 +268,7 @@ def is_valid_json(filename):
 
 
 def main():
-    """
-    App main entry point
-    """
+    """ App main entry point """
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QGuiApplication()
     engine = QQmlApplicationEngine()

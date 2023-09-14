@@ -1,10 +1,18 @@
 [tool.poetry]
 name = "servodoor-app"
 version = "0.1.0"
-description = ""
+description = "A simple GUI for controlling upto 18 (RC servo) t-maze doors."
+license = "MIT"
 authors = ["Will Dickson <wbd@caltech.edu>"]
 readme = "README.md"
 packages= [{include = "servodoor_app"}]
+homepage = "https://github.com/willdickson/servodoor-app"
+repository = "https://github.com/willdickson/servodoor-app"
+classifiers = [ 
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: MIT License',
+    'Development Status :: 3 - Alpha',
+    ]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
