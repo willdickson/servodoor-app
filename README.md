@@ -1,6 +1,6 @@
 # Servodoor-app: RC servo based door control application  
 
-A simple GUI for controlling upto 18 (RC servo) doors. Designed for use
+A simple GUI for controlling up to 18 (RC servo) doors. Designed for use
 with an automated T-Maze system. 
 
 ## Installing
