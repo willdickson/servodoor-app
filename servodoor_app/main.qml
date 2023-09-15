@@ -92,6 +92,7 @@ ApplicationWindow {
                                 text: "Port"
                                 font.pixelSize: fontSizeLarge 
                                 Layout.rightMargin: 20
+                                color: Material.foreground
                             }
                             ComboBox {
                                 id: portComboBox
