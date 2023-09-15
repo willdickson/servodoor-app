@@ -18,7 +18,7 @@ classifiers = [
 python = ">=3.10,<3.12"
 pyside6 = "^6.5.2"
 pyserial = "^3.5"
-servodoor = {git="https://github.com/willdickson/servodoor"}
+servodoor = "^0.1"
 adafruit-ampy = "^1.1.0"
 
 [tool.poetry.scripts]
