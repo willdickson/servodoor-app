@@ -106,7 +106,14 @@ class AppBackend(QObject):
         Load configuration, check that is is valid json and upload configuration 
         to device. 
         """
-        filename = filename.replace('file://', '')
+        # For some reason windows and linux the qml filedialog seems to add a
+        # different prefix to the filename 
+        if 'file:///' in filename:
+            # Remove windows style prefix
+            filename = filename.replace('file:///', '')
+        if 'file://' in filename:
+            # Remove linix style prefile
+            filename = filename.replace('file://', '')
         if self.device is None:
             return
         if not is_valid_json(filename):
